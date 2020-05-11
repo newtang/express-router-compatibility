@@ -20,16 +20,17 @@ const results = {};
 
 (async function(){
 	for(const routerLabel in routerMap){
-		const router = routerMap[routerLabel].construct();
+		const constructRouter = routerMap[routerLabel].construct;
 		const middlewareFxn = routerMap[routerLabel].middleware;
 
 		if(!results[routerLabel]){
 			results[routerLabel] = {};
 		}
-		results[routerLabel].standardMethods = testStandardMethods(router);
-		results[routerLabel].useMethod = testUseMethod(router);
-		results[routerLabel].canBeUsedByExpress = canBeUsedByExpress(router);
-		results[routerLabel].standardFunctionSignature = await standardFunctionSignature(router, middlewareFxn);
+		results[routerLabel].standardMethods = testStandardMethods(constructRouter());
+		results[routerLabel].useMethod = testUseMethod(constructRouter());
+		results[routerLabel].canBeUsedByExpress = canBeUsedByExpress(constructRouter());
+		results[routerLabel].standardFunctionSignature = await standardFunctionSignature(constructRouter(), middlewareFxn);
+		results[routerLabel].sameRouteTwice = sameRouteTwice(constructRouter());
 	}
 
 	console.log(results);
@@ -66,7 +67,6 @@ function canBeUsedByExpress(router){
 }
 
 async function standardFunctionSignature(router, middlewareFxn){
-	
 	const p = new Promise((resolve, reject) => {
 		const app = express();
 		router.get("/", function(req, res, next){
@@ -76,12 +76,23 @@ async function standardFunctionSignature(router, middlewareFxn){
 
 		request(app).get('/').end();
 	});
-	
-	
 
 	return p;
 }
 
+function sameRouteTwice(router){
+	const app = express();
+	router.get("/", ()=>{});
+
+	try{
+		router.get("/", ()=>{});
+	}
+	catch(err){
+		return false;
+	}
+
+	return true;
+}
 
 
 
