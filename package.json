@@ -1,0 +1,28 @@
+{
+  "name": "express-router-compatibility",
+  "version": "1.0.0",
+  "description": "Testing the compatibility of different routers with express ",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/newtang/express-router-compatibility.git"
+  },
+  "keywords": [
+    "express",
+    "router"
+  ],
+  "author": "Jonathan New",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/newtang/express-router-compatibility/issues"
+  },
+  "homepage": "https://github.com/newtang/express-router-compatibility#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "koa-tree-router": "^0.6.0",
+    "supertest": "^4.0.2"
+  }
+}
