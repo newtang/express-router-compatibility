@@ -2,6 +2,8 @@
 const express = require('express');
 const request = require('supertest');
 
+const { ClientRequest } = require('http');
+
 module.exports = {
 	testCommonMethods: function(router){
 		let valid = true;
@@ -29,21 +31,62 @@ module.exports = {
 		return true;
 	},
 
-	standardFunctionSignature: async function(router, middlewareFxn){
-		const p = new Promise((resolve, reject) => {
+	standardFunctionSignature: async function(router, {middleware, send}){
+		const p = new Promise(async (resolve, reject) => {
 			const app = express();
-			router.get("/", function(req, res, next){
-				resolve(typeof next === "function");
-			});
-			app.use(middlewareFxn(router));
+			let value;
+			router.get("/", function(...args){
+				const [req, res, next] = args;
 
-			request(app).get('/').end();
+				const isRes = res && typeof res.send === "function";
+				const nextIsFunction = typeof next === "function";
+
+				value = isRes && nextIsFunction;
+				send(value, args);
+			});
+			app.use(middleware(router));
+
+			const resp = await request(app).get('/');
+			resolve(resp.body);
 		});
 
 		return p;
 	},
 
-	sameRouteTwice: function(router){
+	staticRoutes: async function(router, {middleware, send}){
+		const p = new Promise(async (resolve, reject) => {
+			const app = express();
+			let value;
+			router.get("/static", function(...args){
+				send(true, args);
+			});
+			app.use(middleware(router));
+
+			const resp = await request(app).get('/static');
+			resolve(resp.body);
+		});
+
+		return p;
+	},
+
+	paramRoutes: async function(router, {middleware, getParam, send}){
+		const p = new Promise(async (resolve, reject) => {
+			const app = express();
+			let value;
+			router.get("/:someparam", function(...args){
+				const value = getParam("someparam", args);
+				send(value, args);
+			});
+			app.use(middleware(router));
+
+			const resp = await request(app).get('/hello');
+			resolve(resp.text === "hello");
+		});
+
+		return p;
+	},
+
+	sameRouteTwice: function(router, {routeArgs} ){
 		const app = express();
 		router.get("/", ()=>{});
 
@@ -56,4 +99,5 @@ module.exports = {
 
 		return true;
 	}
+
 };

@@ -8,11 +8,23 @@ const tests = require('./tests');
 const routerMap = {
 	"express": {
 		construct: () => express.Router(),
-		middleware: (router) => router
+		getParam: (param, [req]) => {
+			return req.params[param];
+		},
+		middleware: (router) => router,
+		send:(msg, [, res]) => {
+			res.send(msg);
+		}
 	},
 	"koaTreeRouter": {
 		construct: () => new KoaTreeRouter(),
-		middleware: (router) => router.routes()
+		getParam: (param, [ctx]) => {
+			return ctx.params[param];
+		},
+		middleware: (router) => router.routes(),
+		send: (msg, [ctx]) => {
+			ctx.res.send(msg);
+		}
 	}
 };
 
@@ -21,12 +33,13 @@ const results = {};
 
 (async function(){
 	for(const routerLabel in routerMap){
-		const {construct, middleware} = routerMap[routerLabel];
+		const adapter = routerMap[routerLabel];
+		const {construct} = adapter;
 
 		results[routerLabel] = {};
 		
 		for(const testName in tests){
-			results[routerLabel][testName] = await tests[testName](construct(), middleware);
+			results[routerLabel][testName] = await tests[testName](construct(), adapter);
 		}
 	}
 
