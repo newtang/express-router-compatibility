@@ -98,6 +98,50 @@ module.exports = {
 		}
 
 		return true;
-	}
+	},
+
+	multipleMiddlewares: function(router, { middleware, next, send }){
+		const p = new Promise(async (resolve, reject) => {
+			const app = express();
+			let firstMiddlewareUsed = false;;
+
+			router.get("/static", 
+				function(...args){
+					firstMiddlewareUsed = true;
+					next(args);
+				},
+				function(...args){
+					send(firstMiddlewareUsed, args);
+				}
+			);
+			app.use(middleware(router));
+
+			const resp = await request(app).get('/static');
+			resolve(resp.body);
+		});
+
+		return p;
+	},
+
+	regexRoutes: async function(router, {middleware, send}){
+		const p = new Promise(async (resolve, reject) => {
+			const app = express();
+			let value;
+			try{
+				router.get(/^\/api\/.+$/, function(...args){
+					send(true, args);
+				});
+				app.use(middleware(router));
+			}
+			catch(err){
+				resolve(false);
+			}
+
+			const resp = await request(app).get('/api/somevalue');
+			resolve(resp.body);
+		});
+
+		return p;
+	},
 
 };

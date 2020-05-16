@@ -14,6 +14,9 @@ const routerMap = {
 		middleware: (router) => router,
 		send:(msg, [, res]) => {
 			res.send(msg);
+		},
+		next:([, ,next]) =>{
+			next();
 		}
 	},
 	"koaTreeRouter": {
@@ -24,6 +27,9 @@ const routerMap = {
 		middleware: (router) => router.routes(),
 		send: (msg, [ctx]) => {
 			ctx.res.send(msg);
+		},
+		next:([, next]) =>{
+			next();
 		}
 	}
 };
