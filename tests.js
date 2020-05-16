@@ -144,4 +144,28 @@ module.exports = {
 		return p;
 	},
 
+	pathToRegexRoutes: async function(router, {middleware, send}){
+		const p = new Promise(async (resolve, reject) => {
+			const app = express();
+			let value;
+			try{
+				router.get("/ab+cd", function(...args){
+					send(true, args);
+				});
+				router.get("*", function(...args){
+					send(false, args);
+				});
+				app.use(middleware(router));
+			}
+			catch(err){
+				resolve(false);
+			}
+
+			const resp = await request(app).get('/abbbcd');
+			resolve(resp.body);
+		});
+
+		return p;
+	},
+
 };
