@@ -5,6 +5,28 @@ const request = require('supertest');
 const { ClientRequest } = require('http');
 
 module.exports = {
+	allRoutes: function(router, {middleware, send}){
+		const p = new Promise(async (resolve, reject) => {
+			const app = express();
+			let value;
+			try{
+				router.route("/all")
+					.all(function(...args){
+						send(true, args);
+					});
+				app.use(middleware(router));
+			}
+			catch(err){
+				console.log("err", err);
+				resolve(false);
+			}
+
+			const resp = await request(app).get('/all');
+			resolve(resp.body);
+		});
+
+		return p;
+	},
 	testCommonMethods: function(router){
 		let valid = true;
 		["get", "post", "put", "patch", "delete", "options"].forEach((verb) =>{
@@ -152,7 +174,7 @@ module.exports = {
 				router.get("/ab+cd", function(...args){
 					send(true, args);
 				});
-				router.get("*", function(...args){
+				router.get("/abbbcd", function(...args){
 					send(false, args);
 				});
 				app.use(middleware(router));
@@ -162,6 +184,27 @@ module.exports = {
 			}
 
 			const resp = await request(app).get('/abbbcd');
+			resolve(resp.body);
+		});
+
+		return p;
+	},
+	starRoute: async function(router, {middleware, send}){
+		const p = new Promise(async (resolve, reject) => {
+			const app = express();
+			let value;
+			try{
+				router.get("*", function(...args){
+					send(true, args);
+				});
+				app.use(middleware(router));
+			}
+			catch(err){
+				console.log("err", err);
+				resolve(false);
+			}
+
+			const resp = await request(app).get('/anything');
 			resolve(resp.body);
 		});
 
