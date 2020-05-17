@@ -8,7 +8,6 @@ module.exports = {
 	allRoutes: function(router, {middleware, send}){
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
-			let value;
 			try{
 				router.route("/all")
 					.all(function(...args){
@@ -17,7 +16,6 @@ module.exports = {
 				app.use(middleware(router));
 			}
 			catch(err){
-				console.log("err", err);
 				resolve(false);
 			}
 
@@ -78,7 +76,6 @@ module.exports = {
 	staticRoutes: async function(router, {middleware, send}){
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
-			let value;
 			router.get("/static", function(...args){
 				send(true, args);
 			});
@@ -148,7 +145,6 @@ module.exports = {
 	regexRoutes: async function(router, {middleware, send}){
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
-			let value;
 			try{
 				router.get(/^\/api\/.+$/, function(...args){
 					send(true, args);
@@ -169,7 +165,6 @@ module.exports = {
 	pathToRegexRoutes: async function(router, {middleware, send}){
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
-			let value;
 			try{
 				router.get("/ab+cd", function(...args){
 					send(true, args);
@@ -192,7 +187,6 @@ module.exports = {
 	starRoute: async function(router, {middleware, send}){
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
-			let value;
 			try{
 				router.get("*", function(...args){
 					send(true, args);
@@ -200,7 +194,6 @@ module.exports = {
 				app.use(middleware(router));
 			}
 			catch(err){
-				console.log("err", err);
 				resolve(false);
 			}
 
@@ -209,6 +202,6 @@ module.exports = {
 		});
 
 		return p;
-	},
+	}
 
 };
