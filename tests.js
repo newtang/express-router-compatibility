@@ -122,21 +122,23 @@ module.exports = {
 	multipleMiddlewares: function(router, { middleware, next, send }){
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
-			let firstMiddlewareUsed = false;;
+			let firstMiddlewareUsed = false;
+			let secondMiddlewareUsed = false;
 
 			router.get("/static", 
-				function(...args){
+				function a(...args){
 					firstMiddlewareUsed = true;
 					next(args);
 				},
-				function(...args){
+				function b(...args){
+					secondMiddlewareUsed = true;
 					send(firstMiddlewareUsed, args);
 				}
 			);
 			app.use(middleware(router));
 
-			const resp = await request(app).get('/static');
-			resolve(resp.body);
+			await request(app).get('/static');
+			resolve(firstMiddlewareUsed && secondMiddlewareUsed);
 		});
 
 		return p;
