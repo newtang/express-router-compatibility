@@ -27,6 +27,7 @@
     "koa-tree-router": "^0.6.0",
     "routr": "^2.1.2",
     "server-router": "^6.1.0",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "trek-router": "^1.2.0"
   }
 }

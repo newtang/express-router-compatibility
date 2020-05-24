@@ -7,6 +7,7 @@ const FindMyWayAdapter = require('./adapters/FindMyWayAdapter');
 const KoaRouterAdapter = require('./adapters/KoaRouterAdapter');
 const KoaTreeAdapter = require('./adapters/KoaTreeAdapter');
 const ServerRouterAdapter = require('./adapters/ServerRouterAdapter');
+const TrekRouterAdapter = require('./adapters/TrekRouterAdapter');
 
 /**
 	* Notes:
@@ -18,11 +19,12 @@ const ServerRouterAdapter = require('./adapters/ServerRouterAdapter');
 **/
 
 const routerMap = {
-	"express": ExpressAdapter,
-	"koaRouter": KoaRouterAdapter,
-	"koaTreeRouter": KoaTreeAdapter,
-	"findMyWay": FindMyWayAdapter,
-	"serverRouter": ServerRouterAdapter
+	// "express": ExpressAdapter,
+	// "koaRouter": KoaRouterAdapter,
+	// "koaTreeRouter": KoaTreeAdapter,
+	// "findMyWay": FindMyWayAdapter,
+	// "serverRouter": ServerRouterAdapter,
+	"trekRouter": TrekRouterAdapter
 };
 
 const results = {};

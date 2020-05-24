@@ -206,9 +206,9 @@ module.exports = {
 			const resp = await request(app).get('/abbbcd');
 			resolve(resp.body);
 		});
-
 		return p;
 	},
+	
 	starRoute: async function(adapter){
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
