@@ -16,6 +16,10 @@ class ExpressAdapter {
 		return req.params[param];
 	}
 
+	buildGetRoute(path, ...callbacks){
+		return this._router.get(path, ...callbacks);
+	}
+
 	middleware() {
 		return this._router;
 	}

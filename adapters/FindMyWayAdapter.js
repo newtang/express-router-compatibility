@@ -16,6 +16,10 @@ class FindMyWayAdapter {
 		return req.params[param];
 	}
 
+	buildGetRoute(path, ...callbacks){
+		return this._router.get(path, ...callbacks);
+	}
+
 	middleware() {
 		const router = this.router;
 		return function(...args){

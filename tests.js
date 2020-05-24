@@ -6,6 +6,9 @@ const { ClientRequest } = require('http');
 
 module.exports = {
 	allRoutes: function(adapter){
+		/**
+		 * Checks if router.route(path).all is available 
+		 */
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
 			try{
@@ -16,7 +19,6 @@ module.exports = {
 				app.use(adapter.middleware());
 			}
 			catch(err){
-				console.log(err);
 				resolve(false);
 			}
 
@@ -27,6 +29,9 @@ module.exports = {
 		return p;
 	},
 	testCommonMethods: function(adapter){
+		/**
+		 * Checks if router.get, router.post, etc are available on the router object
+		 */
 		let valid = true;
 		["get", "post", "put", "patch", "delete", "options"].forEach((verb) =>{
 			if(typeof adapter.router[verb] !== "function"){
@@ -38,10 +43,17 @@ module.exports = {
 	},
 
 	testUseMethod: function(adapter){
+		/**
+		 * Checks if router.use is an available function
+		 */
 		return typeof adapter.router.use === "function";
 	},
 
 	canBeUsedByExpress: function(adapter){
+		/**
+		 * Checks if the router itself can be used as an express middleware
+		 * (as opposed to calling a method on the router)
+		 */
 		const app = express();
 		try{
 			app.use(adapter.router);
@@ -53,10 +65,13 @@ module.exports = {
 	},
 
 	standardFunctionSignature: async function(adapter){
+		/**
+		 * Checks if req, res, next are the arguments of a router callback.
+		 */
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
 			let value;
-			adapter.router.get("/", function(...args){
+			adapter.buildGetRoute("/", function(...args){
 				const [req, res, next] = args;
 
 				const isRes = res && typeof res.send === "function";
@@ -75,13 +90,15 @@ module.exports = {
 	},
 
 	staticRoutes: async function(adapter){
+		/**
+		 * Checks if a router can handle static routes.
+		 */
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
-			adapter.router.get("/static", function(...args){
+			adapter.buildGetRoute("/static", function(...args){
 				adapter.send(true, args);
-			});
+			})
 			app.use(adapter.middleware());
-
 			const resp = await request(app).get('/static');
 			resolve(resp.body);
 		});
@@ -93,7 +110,7 @@ module.exports = {
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
 			let value;
-			adapter.router.get("/:someparam", function(...args){
+			adapter.buildGetRoute("/:someparam", function(...args){
 				const value = adapter.getParam("someparam", args);
 				adapter.send(value, args);
 			});
@@ -108,10 +125,10 @@ module.exports = {
 
 	sameRouteTwice: function(adapter ){
 		const app = express();
-		adapter.router.get("/", ()=>{});
+		adapter.buildGetRoute("/", ()=>{});
 
 		try{
-			adapter.router.get("/", ()=>{});
+			adapter.buildGetRoute("/", ()=>{});
 		}
 		catch(err){
 			return false;
@@ -126,10 +143,15 @@ module.exports = {
 			let firstMiddlewareUsed = false;
 			let secondMiddlewareUsed = false;
 
-			adapter.router.get("/static", 
+			adapter.buildGetRoute("/static", 
 				function a(...args){
 					firstMiddlewareUsed = true;
-					adapter.next(args);
+					try{
+						adapter.next(args);
+					}
+					catch(err){
+						adapter.send("", args);
+					}
 				},
 				function b(...args){
 					secondMiddlewareUsed = true;
@@ -149,7 +171,7 @@ module.exports = {
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
 			try{
-				adapter.router.get(/^\/api\/.+$/, function(...args){
+				adapter.buildGetRoute(/^\/api\/.+$/, function(...args){
 					adapter.send(true, args);
 				});
 				app.use(adapter.middleware());
@@ -169,10 +191,10 @@ module.exports = {
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
 			try{
-				adapter.router.get("/ab+cd", function(...args){
+				adapter.buildGetRoute("/ab+cd", function(...args){
 					adapter.send(true, args);
 				});
-				adapter.router.get("/abbbcd", function(...args){
+				adapter.buildGetRoute("/abbbcd", function(...args){
 					adapter.send(false, args);
 				});
 				app.use(adapter.middleware());
@@ -191,7 +213,7 @@ module.exports = {
 		const p = new Promise(async (resolve, reject) => {
 			const app = express();
 			try{
-				adapter.router.get("*", function(...args){
+				adapter.buildGetRoute("*", function(...args){
 					adapter.send(true, args);
 				});
 				app.use(adapter.middleware());

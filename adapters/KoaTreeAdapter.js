@@ -16,6 +16,10 @@ class KoaTreeAdapter {
 		return ctx.params[param];
 	}
 
+	buildGetRoute(path, ...callbacks){
+		return this._router.get(path, ...callbacks);
+	}
+
 	middleware() {
 		return this._router.routes();
 	}

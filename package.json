@@ -21,12 +21,12 @@
   },
   "homepage": "https://github.com/newtang/express-router-compatibility#readme",
   "dependencies": {
-    "@hapi/call": "^8.0.0",
     "express": "^4.17.1",
     "find-my-way": "^3.0.1",
     "koa-router": "^8.0.8",
     "koa-tree-router": "^0.6.0",
     "routr": "^2.1.2",
+    "server-router": "^6.1.0",
     "supertest": "^4.0.2"
   }
 }
