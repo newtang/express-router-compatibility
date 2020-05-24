@@ -26,6 +26,7 @@
     "find-my-way": "^3.0.1",
     "koa-router": "^8.0.8",
     "koa-tree-router": "^0.6.0",
+    "routr": "^2.1.2",
     "supertest": "^4.0.2"
   }
 }
