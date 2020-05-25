@@ -19,11 +19,11 @@ const TrekRouterAdapter = require('./adapters/TrekRouterAdapter');
 **/
 
 const routerMap = {
-	// "express": ExpressAdapter,
-	// "koaRouter": KoaRouterAdapter,
-	// "koaTreeRouter": KoaTreeAdapter,
-	// "findMyWay": FindMyWayAdapter,
-	// "serverRouter": ServerRouterAdapter,
+	"express": ExpressAdapter,
+	"koaRouter": KoaRouterAdapter,
+	"koaTreeRouter": KoaTreeAdapter,
+	"findMyWay": FindMyWayAdapter,
+	"serverRouter": ServerRouterAdapter,
 	"trekRouter": TrekRouterAdapter
 };
 

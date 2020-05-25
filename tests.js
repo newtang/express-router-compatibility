@@ -9,7 +9,7 @@ module.exports = {
 		/**
 		 * Checks if router.route(path).all is available 
 		 */
-		const p = new Promise(async (resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			const app = express();
 			try{
 				adapter.router.route("/all")
@@ -26,7 +26,7 @@ module.exports = {
 			resolve(resp.body);
 		});
 
-		return p;
+		
 	},
 	testCommonMethods: function(adapter){
 		/**
@@ -68,7 +68,7 @@ module.exports = {
 		/**
 		 * Checks if req, res, next are the arguments of a router callback.
 		 */
-		const p = new Promise(async (resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			const app = express();
 			let value;
 			adapter.buildGetRoute("/", function(...args){
@@ -86,14 +86,14 @@ module.exports = {
 			resolve(resp.body);
 		});
 
-		return p;
+		
 	},
 
 	staticRoutes: async function(adapter){
 		/**
 		 * Checks if a router can handle static routes.
 		 */
-		const p = new Promise(async (resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			const app = express();
 			adapter.buildGetRoute("/static", function(...args){
 				adapter.send(true, args);
@@ -103,11 +103,11 @@ module.exports = {
 			resolve(resp.body);
 		});
 
-		return p;
+		
 	},
 
 	paramRoutes: async function(adapter){
-		const p = new Promise(async (resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			const app = express();
 			let value;
 			adapter.buildGetRoute("/:someparam", function(...args){
@@ -120,7 +120,7 @@ module.exports = {
 			resolve(resp.text === "hello");
 		});
 
-		return p;
+		
 	},
 
 	sameRouteTwice: function(adapter ){
@@ -138,7 +138,7 @@ module.exports = {
 	},
 
 	multipleMiddlewares: function(adapter){
-		const p = new Promise(async (resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			const app = express();
 			let firstMiddlewareUsed = false;
 			let secondMiddlewareUsed = false;
@@ -164,11 +164,10 @@ module.exports = {
 			resolve(firstMiddlewareUsed && secondMiddlewareUsed);
 		});
 
-		return p;
+		
 	},
-
 	regexRoutes: async function(adapter){
-		const p = new Promise(async (resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			const app = express();
 			try{
 				adapter.buildGetRoute(/^\/api\/.+$/, function(...args){
@@ -183,12 +182,10 @@ module.exports = {
 			const resp = await request(app).get('/api/somevalue');
 			resolve(resp.body);
 		});
-
-		return p;
 	},
 
 	pathToRegexRoutes: async function(adapter){
-		const p = new Promise(async (resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			const app = express();
 			try{
 				adapter.buildGetRoute("/ab+cd", function(...args){
@@ -206,11 +203,11 @@ module.exports = {
 			const resp = await request(app).get('/abbbcd');
 			resolve(resp.body);
 		});
-		return p;
+		
 	},
-	
+
 	starRoute: async function(adapter){
-		const p = new Promise(async (resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			const app = express();
 			try{
 				adapter.buildGetRoute("*", function(...args){
@@ -226,7 +223,7 @@ module.exports = {
 			resolve(resp.body);
 		});
 
-		return p;
+		
 	}
 
 };
