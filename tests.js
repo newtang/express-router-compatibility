@@ -121,19 +121,38 @@ module.exports = {
 
 	sameRouteTwice: function(adapter){
 		/**
-		 * Checks if a router allows duplicate routes.
+		 * Checks if a router allows and executes duplicate routes.
 		 */
-		const app = express();
-		adapter.buildGetRoute("/", ()=>{});
+		return new Promise(async (resolve, reject) => {
+			const app = express();
+			let firstCalled = false;
+			let secondCalled = false
 
-		try{
-			adapter.buildGetRoute("/", ()=>{});
-		}
-		catch(err){
-			return false;
-		}
+			adapter.buildGetRoute("/", async function (...args){
+				firstCalled = true;
+				try{
+					// next is async to catch an unhandled rejection from Koa. It shouldn't make
+					// any difference to the other adapters.
+					await adapter.next(args);
+				}
+				catch(err){
+					adapter.send("", args);
+				}
+			});
+			try{
+				adapter.buildGetRoute("/", function (...args){
+					secondCalled = true;
+					adapter.send("", args);
+				});
+			}
+			catch(err){
+				resolve(false);
+			}
+			app.use(adapter.middleware());
 
-		return true;
+			await request(app).get('/');
+			resolve(firstCalled && secondCalled);
+		});
 	},
 
 	multipleMiddlewares: function(adapter){
@@ -253,6 +272,36 @@ module.exports = {
 
 			const resp = await request(app).get('/anything');
 			resolve(resp.body);
+		});
+	},
+	compatibleWithExpress404: function(adapter){
+		/**
+		 * Checks if a router works with Express' way of handling 404s.
+		 */
+		return new Promise(async (resolve, reject) => {
+			const message404 = "Not found";
+			const app = express();
+
+			try{
+				adapter.buildGetRoute("/", function(...args){
+					console.log("route");
+					adapter.send(true, args);
+				});
+				app.use(adapter.middleware());
+				app.use(function (req, res, next) {
+				  res.status(404).send(message404);
+				})
+				app.use(function (err, req, res, next) {
+				  //we need this if express throws an exception, trying to use our middleware
+				  res.status(500).send('Something broke!')
+				})
+			}
+			catch(err){
+				resolve(false);
+			}
+
+			const resp = await request(app).get('/not_there');
+			resolve(resp.status === 404 && resp.text === message404);
 		});
 	}
 };

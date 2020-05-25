@@ -28,8 +28,8 @@ class KoaTreeAdapter {
 		ctx.res.send(msg);
 	}
 
-	next([, next]){
-		next();
+	async next([, next]){
+		await next();
 	}
 
 }

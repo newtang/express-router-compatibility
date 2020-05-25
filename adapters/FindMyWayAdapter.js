@@ -23,10 +23,10 @@ class FindMyWayAdapter {
 	middleware() {
 		const router = this.router;
 		return function(...args){
-			const [req] = args;
+			const [req, , next] = args;
 			const handle = router.find(req.method, req.path);
 			if (!handle) {
-		      return router.defaultRoute && router.defaultRoute(...reqs);
+		      return next();
 		    }
 		    req.params = handle.params;
 		    return handle.handler(...args);
