@@ -16,6 +16,10 @@ class ExpressAdapter {
 		return req.params[param];
 	}
 
+	paramFunction([req, res, next, paramValue]){
+		return paramValue;
+	}
+
 	buildGetRoute(path, ...callbacks){
 		return this._router.get(path, ...callbacks);
 	}
@@ -29,6 +33,10 @@ class ExpressAdapter {
 	}
 
 	next([, ,next]){
+		next();
+	}
+
+	paramNext([, ,next]){
 		next();
 	}
 

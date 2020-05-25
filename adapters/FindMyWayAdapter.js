@@ -16,6 +16,10 @@ class FindMyWayAdapter {
 		return req.params[param];
 	}
 
+	paramFunction(){
+		throw new Error("Not implemented");
+	}
+
 	buildGetRoute(path, ...callbacks){
 		return this._router.get(path, ...callbacks);
 	}
@@ -39,6 +43,10 @@ class FindMyWayAdapter {
 
 	next([, ,next]){
 		next();
+	}
+
+	paramNext(){
+		throw new Error("Not implemented");
 	}
 
 }

@@ -16,6 +16,10 @@ class ServerRouterAdapter {
 		return params[param];
 	}
 
+	paramFunction(){
+		throw new Error("Not implemented");
+	}
+
 	buildGetRoute(path, ...callbacks){
 		return this._router.route('GET', path, ...callbacks);
 	}
@@ -30,6 +34,10 @@ class ServerRouterAdapter {
 
 	next(){
 		throw new Error("No next available");
+	}
+
+	paramNext(){
+		throw new Error("Not implemented");
 	}
 
 }

@@ -16,6 +16,10 @@ class KoaTreeAdapter {
 		return ctx.params[param];
 	}
 
+	paramFunction(){
+		throw new Error("Not implemented");
+	}
+
 	buildGetRoute(path, ...callbacks){
 		return this._router.get(path, ...callbacks);
 	}
@@ -30,6 +34,10 @@ class KoaTreeAdapter {
 
 	async next([, next]){
 		await next();
+	}
+
+	paramNext(){
+		throw new Error("Not implemented");
 	}
 
 }

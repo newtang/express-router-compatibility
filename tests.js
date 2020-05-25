@@ -101,6 +101,35 @@ module.exports = {
 		
 	},
 
+	paramMethod: async function(adapter){
+		/**
+		 * Checks if a router has functional param method.
+		 */
+		return new Promise(async (resolve, reject) => {
+			
+			
+			if(adapter.router.param && typeof adapter.router.param === "function"){
+				const app = express();
+				let foundValue;
+				adapter.router.param('user', function (...args) {
+					foundValue = adapter.paramFunction(args);
+					adapter.paramNext(args);
+				});
+
+				adapter.buildGetRoute("/:user", function(...args){ 
+					adapter.send(true, args);
+				});
+				app.use(adapter.middleware());
+
+				const resp = await request(app).get('/jon');
+				resolve(resp.body === true && foundValue === "jon");
+			}
+			else{
+				resolve(false);
+			}
+		});	
+	},
+
 	paramRoutes: async function(adapter){
 		/**
 		 * Checks if a router can handle parameterized routes.

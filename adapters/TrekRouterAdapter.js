@@ -16,6 +16,10 @@ class TrekRouterAdapter {
 		return req.params[param];
 	}
 
+	paramFunction(){
+		throw new Error("Not implemented");
+	}
+
 	buildGetRoute(path, ...callbacks){
 		return this._router.add('GET', path, ...callbacks);
 	}
@@ -43,6 +47,10 @@ class TrekRouterAdapter {
 
 	next(){
 		throw new Error("No next available");
+	}
+
+	paramNext(){
+		throw new Error("Not implemented");
 	}
 
 }

@@ -16,6 +16,10 @@ class KoaRouterAdapter {
 		return ctx.params[param];
 	}
 
+	paramFunction([paramValue]){
+		return paramValue;
+	}
+
 	buildGetRoute(path, ...callbacks){
 		return this._router.get(path, ...callbacks);
 	}
@@ -29,6 +33,10 @@ class KoaRouterAdapter {
 	}
 
 	next([, next]){
+		next();
+	}
+
+	paramNext([, , next]){
 		next();
 	}
 
