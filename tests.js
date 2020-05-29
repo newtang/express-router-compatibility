@@ -5,7 +5,7 @@ const request = require('supertest');
 const { ClientRequest } = require('http');
 
 module.exports = {
-	allRoutes: function(adapter){
+	"router.route(path).all": function(adapter){
 		/**
 		 * Checks if router.route(path).all is available 
 		 */
@@ -26,7 +26,7 @@ module.exports = {
 			resolve(resp.body);
 		});
 	},
-	testCommonMethods: function(adapter){
+	"common methods (.get, .post, etc)": function(adapter){
 		/**
 		 * Checks if router.get, router.post, etc are available on the router object
 		 */
@@ -39,13 +39,13 @@ module.exports = {
 
 		return valid
 	},
-	testUseMethod: function(adapter){
+	"router.use": function(adapter){
 		/**
 		 * Checks if router.use is an available function
 		 */
 		return typeof adapter.router.use === "function";
 	},
-	canBeUsedByExpress: function(adapter){
+	"express.use(router)": function(adapter){
 		/**
 		 * Checks if the router itself can be used as an express middleware
 		 * (as opposed to calling a method on the router)
@@ -59,7 +59,7 @@ module.exports = {
 		}
 		return true;
 	},
-	standardFunctionSignature: async function(adapter){
+	"(req, res, next) => {} for middleware": async function(adapter){
 		/**
 		 * Checks if req, res, next are the arguments of a router callback.
 		 */
@@ -84,7 +84,7 @@ module.exports = {
 		
 	},
 
-	staticRoutes: async function(adapter){
+	"static routes": async function(adapter){
 		/**
 		 * Checks if a router can handle static routes.
 		 */
@@ -97,11 +97,8 @@ module.exports = {
 			const resp = await request(app).get('/static');
 			resolve(resp.body);
 		});
-
-		
 	},
-
-	paramMethod: async function(adapter){
+	"router.param()": async function(adapter){
 		/**
 		 * Checks if a router has functional param method.
 		 */
@@ -130,7 +127,7 @@ module.exports = {
 		});	
 	},
 
-	paramRoutes: async function(adapter){
+	"route parameters": async function(adapter){
 		/**
 		 * Checks if a router can handle parameterized routes.
 		 */
@@ -148,7 +145,7 @@ module.exports = {
 		});		
 	},
 
-	sameRouteTwice: function(adapter){
+	"duplicate routes": function(adapter){
 		/**
 		 * Checks if a router allows and executes duplicate routes.
 		 */
@@ -184,7 +181,7 @@ module.exports = {
 		});
 	},
 
-	multipleMiddlewares: function(adapter){
+	"multiple middlewares": function(adapter){
 		/**
 		 * Checks if a router allows for multiple middlewares.
 		 */
@@ -216,7 +213,7 @@ module.exports = {
 
 		
 	},
-	regexRoutes: async function(adapter){
+	"regex routes": async function(adapter){
 		/**
 		 * Checks if a router allows for regular expression routes
 		 */
@@ -237,7 +234,7 @@ module.exports = {
 		});
 	},
 
-	orderIndependent: async function(adapter){
+	"order independent": async function(adapter){
 		/**
 		 * Checks if a router allows for regular expression routes
 		 */
@@ -260,7 +257,7 @@ module.exports = {
 			resolve(resp.body);
 		});	
 	},
-	pathToRegexRoutes: async function(adapter){
+	"path-to-regex style routes": async function(adapter){
 		/**
 		 * Checks if a router handles "path-to-regex" styles routes
 		 */
@@ -283,7 +280,7 @@ module.exports = {
 			resolve(resp.body);
 		});
 	},
-	starRoute: async function(adapter){
+	"wildcard (*) routes": async function(adapter){
 		/**
 		 * Checks if a router handles wildcard routes
 		 */
@@ -303,7 +300,7 @@ module.exports = {
 			resolve(resp.body);
 		});
 	},
-	compatibleWithExpress404: function(adapter){
+	"express 404 handler": function(adapter){
 		/**
 		 * Checks if a router works with Express' way of handling 404s.
 		 */

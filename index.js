@@ -8,6 +8,7 @@ const KoaRouterAdapter = require('./adapters/KoaRouterAdapter');
 const KoaTreeAdapter = require('./adapters/KoaTreeAdapter');
 const ServerRouterAdapter = require('./adapters/ServerRouterAdapter');
 const TrekRouterAdapter = require('./adapters/TrekRouterAdapter');
+const npmUrl = 'https://www.npmjs.com/package/';
 
 /**
 	* Notes:
@@ -20,11 +21,11 @@ const TrekRouterAdapter = require('./adapters/TrekRouterAdapter');
 
 const routerMap = {
 	"express": ExpressAdapter,
-	"koaRouter": KoaRouterAdapter,
-	"koaTreeRouter": KoaTreeAdapter,
-	"findMyWay": FindMyWayAdapter,
-	"serverRouter": ServerRouterAdapter,
-	"trekRouter": TrekRouterAdapter
+	"koa-router": KoaRouterAdapter,
+	"koa-tree-router": KoaTreeAdapter,
+	"find-my-way": FindMyWayAdapter,
+	"server-router": ServerRouterAdapter,
+	"trek-router": TrekRouterAdapter
 };
 
 const results = {};
@@ -40,5 +41,43 @@ const results = {};
 		}
 	}
 
-	console.log(results);
+	const includeLink = true;
+	console.log(convertToTable(results, includeLink));
 })();
+
+function buildNpmMarkdownLink(router){
+	return `[${router}](${npmUrl}${router})`;
+}
+
+function convertToTable(results, includeLink=true){
+	
+	const routers = Object.keys(results);
+	const firstRouter = routers[0];
+
+	const mapper = includeLink
+		? router => buildNpmMarkdownLink(router)
+		: router => router;
+
+
+	const header = `| | ${routers.map(mapper).join(' | ')} |`;
+	const dividers =`| --- | ${routers.map(r => '---').join(' | ')} |`;
+	const rows = [];
+
+	const testNames = Object.keys(results[firstRouter]);
+
+	for(const test of testNames){
+		const row = [test];
+		for(const router of routers){
+			row.push(results[router][test]);
+		}
+		rows.push(row.join(' | '));
+	}
+	const allData = rows.join('\n');
+
+	return `${header}\n${dividers}\n${allData}`;
+}
+
+
+
+
+
