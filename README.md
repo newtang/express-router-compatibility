@@ -1,9 +1,10 @@
 # express-router-compatibility
 Testing the compatibility of different routers with express
 
-`npm run start` will execute the tests and output the table. The table below is just updated by copying and pasting the result.
+`npm run start` will execute the tests and output the table. The tables below are just updated by copying and pasting the result.
 
-| | [express](https://www.npmjs.com/package/express) | [koa-router](https://www.npmjs.com/package/koa-router) | [koa-tree-router](https://www.npmjs.com/package/koa-tree-router) | [find-my-way](https://www.npmjs.com/package/find-my-way) | [server-router](https://www.npmjs.com/package/server-router) | [trek-router](https://www.npmjs.com/package/trek-router) |
+Compatibility Tests
+ | | [express](https://www.npmjs.com/package/express) | [koa-router](https://www.npmjs.com/package/koa-router) | [koa-tree-router](https://www.npmjs.com/package/koa-tree-router) | [find-my-way](https://www.npmjs.com/package/find-my-way) | [server-router](https://www.npmjs.com/package/server-router) | [trek-router](https://www.npmjs.com/package/trek-router) |
 | --- | --- | --- | --- | --- | --- | --- |
 router.route(path).all | true | false | false | false | false | false
 common methods (.get, .post, etc) | true | true | true | true | false | false
@@ -16,7 +17,11 @@ route parameters | true | true | true | true | true | true
 duplicate routes | true | true | false | false | false | false
 multiple middlewares | true | true | true | false | false | false
 regex routes | true | true | false | false | false | false
-order independent | false | false | false | true | true | true
 path-to-regex style routes | true | false | false | false | false | false
 wildcard (*) routes | true | true | false | true | true | true
 express 404 handler | true | false | false | true | false | false
+
+Other Tests
+ | | [express](https://www.npmjs.com/package/express) | [koa-router](https://www.npmjs.com/package/koa-router) | [koa-tree-router](https://www.npmjs.com/package/koa-tree-router) | [find-my-way](https://www.npmjs.com/package/find-my-way) | [server-router](https://www.npmjs.com/package/server-router) | [trek-router](https://www.npmjs.com/package/trek-router) |
+| --- | --- | --- | --- | --- | --- | --- |
+order independent | false | false | false | true | true | true

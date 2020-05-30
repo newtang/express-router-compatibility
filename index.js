@@ -1,6 +1,7 @@
 'use strict';
 
-const tests = require('./tests');
+const compatibilityTests = require('./compatibilityTests');
+const otherTests = require('./otherTests');
 
 const ExpressAdapter = require('./adapters/ExpressAdapter');
 const FindMyWayAdapter = require('./adapters/FindMyWayAdapter');
@@ -9,15 +10,6 @@ const KoaTreeAdapter = require('./adapters/KoaTreeAdapter');
 const ServerRouterAdapter = require('./adapters/ServerRouterAdapter');
 const TrekRouterAdapter = require('./adapters/TrekRouterAdapter');
 const npmUrl = 'https://www.npmjs.com/package/';
-
-/**
-	* Notes:
-	FindMyWay
-		- You have to wrap the middleware so it works. When this happens, it can technically
-		function with default arguments.
-		- Regex handling is weird.
-			- you want to declare a regular expression route, you must put the regular expression inside round parenthesis after the parameter name.
-**/
 
 const routerMap = {
 	"express": ExpressAdapter,
@@ -28,9 +20,19 @@ const routerMap = {
 	"trek-router": TrekRouterAdapter
 };
 
-const results = {};
+
 
 (async function(){
+	const compatibilityTestResults = await runTests(compatibilityTests);
+	const otherTestResults = await runTests(otherTests);
+
+	const includeLink = true;
+	console.log("Compatibility Tests\n", convertToTable(compatibilityTestResults, includeLink));
+	console.log("\nOther Tests\n", convertToTable(otherTestResults, includeLink));
+})();
+
+async function runTests(tests){
+	const results = {};
 	for(const routerLabel in routerMap){
 		const Adapter = routerMap[routerLabel];
 
@@ -40,13 +42,7 @@ const results = {};
 			results[routerLabel][testName] = await tests[testName](new Adapter());
 		}
 	}
-
-	const includeLink = true;
-	console.log(convertToTable(results, includeLink));
-})();
-
-function buildNpmMarkdownLink(router){
-	return `[${router}](${npmUrl}${router})`;
+	return results;
 }
 
 function convertToTable(results, includeLink=true){
@@ -75,6 +71,10 @@ function convertToTable(results, includeLink=true){
 	const allData = rows.join('\n');
 
 	return `${header}\n${dividers}\n${allData}`;
+}
+
+function buildNpmMarkdownLink(router){
+	return `[${router}](${npmUrl}${router})`;
 }
 
 
